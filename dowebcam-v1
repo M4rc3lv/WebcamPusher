@@ -1,0 +1,20 @@
+#!/bin/bash
+
+HOST='ftp.yoursite.net'
+USER='username'
+PASSWD='password'
+
+date > datum.txt
+
+pkill webcamd
+sleep 3
+ffmpeg -f video4linux2 -i /dev/video0 -vframes 1 3dprinter.jpg -y
+
+ftp -n -v $HOST << EOT
+user $USER $PASSWD
+prompt
+cd httpdocs
+put datum.txt
+binary
+put 3dprinter.jpg
+EOT
